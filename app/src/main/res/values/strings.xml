@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <!-- Firebase -->
+    <string name="facebook_app_id">118401955463924</string>
+    <string name="fb_login_protocol_scheme">fb118401955463924</string>
+
+</resources>
