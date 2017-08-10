@@ -1,4 +1,4 @@
-package com.example.myapplication.view.tabbar.login.presenter
+package com.example.myapplication.view.login.presenter
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity

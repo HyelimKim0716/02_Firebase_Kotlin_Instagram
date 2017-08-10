@@ -1,19 +1,14 @@
-package com.example.myapplication.view.tabbar
+package com.example.myapplication.view.tabbar.photo.presenter
 
-import android.Manifest
 import android.app.Activity
 import android.content.CursorLoader
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
-import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
 import android.widget.Toast
-import com.example.myapplication.R
 import com.example.myapplication.model.Content
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -21,42 +16,40 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import kotlinx.android.synthetic.main.activity_add_photo.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddPhotoActivity : AppCompatActivity() {
-
-    private val PICK_FROM_ALBUM = 0
-    private var imageUrl: String? = null
+/**
+ * Created by Owner on 2017-08-10.
+ */
+class AddPhotoPresenter(override val view: AddPhotoContract.View, val activity: Activity) : AddPhotoContract.Presenter {
+    val PICK_FROM_ALBUM = 0
 
     private var mStorageRef: StorageReference? = null
-
     private var mDatabaseRef: DatabaseReference? = null
     private var mAuth: FirebaseAuth? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_photo)
+    private var imageUrl: String? = null
 
-        // Request permission
-        ActivityCompat.requestPermissions(this@AddPhotoActivity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-
-        btn_upload.setOnClickListener(btnUploadClickListener)
-
-        // Open Album
-        val photoPickerIntent: Intent = Intent(Intent.ACTION_PICK)
-        photoPickerIntent.type = "image/*"
-        startActivityForResult(photoPickerIntent, PICK_FROM_ALBUM)
-
+    init {
         mStorageRef = FirebaseStorage.getInstance().reference
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("message")
-
+    }
+    /** Request permission */
+    override fun requestPermission(activity: Activity) {
+        ActivityCompat.requestPermissions(activity, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
     }
 
-    val btnUploadClickListener = View.OnClickListener {
+    override fun openAlbum() {
+        val photoPickerIntent: Intent = Intent(Intent.ACTION_PICK)
+        photoPickerIntent.type = "image/*"
+        activity.startActivityForResult(photoPickerIntent, PICK_FROM_ALBUM)
+    }
+
+    override fun uploadToFirebaseServer() {
         Log.d("AddPhotoActivity", "btnUploadClickListener")
+
         val file: File = File(imageUrl)
         val contentUri: Uri = Uri.fromFile(file)
 //        val storageReference: StorageReference?
@@ -74,7 +67,7 @@ class AddPhotoActivity : AppCompatActivity() {
             val images = mDatabaseRef?.child("images")?.push()
             val sdf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val content: Content = Content(
-                    et_explain.text.toString(),
+                    view.getExplain(),
                     uri.toString(),
                     mAuth?.currentUser?.uid,
                     mAuth?.currentUser?.email,
@@ -82,25 +75,20 @@ class AddPhotoActivity : AppCompatActivity() {
 
             images?.setValue(content)
 
-            Toast.makeText(this@AddPhotoActivity, "Upload Success", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Upload Success", Toast.LENGTH_SHORT).show()
 
-            this@AddPhotoActivity.finish()
+            activity.finish()
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        // After selecting photo from gallery, change url to file path
-        if (requestCode == PICK_FROM_ALBUM && resultCode == Activity.RESULT_OK) {
-            val projection: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
-                                                        // context, uri, projection, selection, selectionArgs, sortOrder
-            val cursorLoader: CursorLoader = CursorLoader(this@AddPhotoActivity, data?.data, projection, null, null, null)
-            val cursor: Cursor = cursorLoader.loadInBackground()
-            val columnIndex: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor.moveToFirst()
+    override fun changeImageUrlToPath(data: Intent?) {
+        val projection: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
+                                                    // context, uri, projection, selection, selectionArgs, sortOrder
+        val cursorLoader: CursorLoader = CursorLoader(activity, data?.data, projection, null, null, null)
+        val cursor: Cursor = cursorLoader.loadInBackground()
+        val columnIndex: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
 
-            imageUrl = cursor.getString(columnIndex)
-            iv_user.setImageURI(data?.data)
-
-        }
+        imageUrl = cursor.getString(columnIndex)
     }
 }

@@ -6,7 +6,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import com.example.myapplication.R
 import com.example.myapplication.util.replaceToFragment
-import com.example.myapplication.view.tabbar.AddPhotoActivity
+import com.example.myapplication.view.tabbar.photo.AddPhotoActivity
 import com.example.myapplication.view.tabbar.home.HomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
 

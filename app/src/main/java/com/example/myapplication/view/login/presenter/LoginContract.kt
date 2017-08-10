@@ -1,6 +1,5 @@
-package com.example.myapplication.view.tabbar.login.presenter
+package com.example.myapplication.view.login.presenter
 
-import com.example.myapplication.view.BaseContract
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.login.LoginResult

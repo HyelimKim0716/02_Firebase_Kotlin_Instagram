@@ -1,12 +1,12 @@
-package com.example.myapplication.view.tabbar.login
+package com.example.myapplication.view.login
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.example.myapplication.R
-import com.example.myapplication.view.tabbar.login.presenter.LoginContract
-import com.example.myapplication.view.tabbar.login.presenter.LoginPresenter
+import com.example.myapplication.view.login.presenter.LoginContract
+import com.example.myapplication.view.login.presenter.LoginPresenter
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
