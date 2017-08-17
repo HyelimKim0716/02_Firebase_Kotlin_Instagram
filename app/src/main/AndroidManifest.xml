@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.myapplication.view.login.LoginActivity">
+        <activity android:name=".view.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,7 +41,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.MainActivity" />
-        <activity android:name="com.example.myapplication.view.tabbar.photo.AddPhotoActivity"></activity>
+        <activity android:name=".view.tabbar.photo.AddPhotoActivity" />
+        <activity android:name=".view.tabbar.comment.CommentActivity"></activity>
     </application>
 
 </manifest>

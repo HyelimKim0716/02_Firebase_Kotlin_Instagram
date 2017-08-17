@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import com.example.myapplication.R
 import com.example.myapplication.util.replaceToFragment
+import com.example.myapplication.view.tabbar.detail.DetailFragment
 import com.example.myapplication.view.tabbar.photo.AddPhotoActivity
 import com.example.myapplication.view.tabbar.home.HomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,7 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     val mNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-            R.id.action_home -> replaceToFragment(R.id.frame_layout, HomeFragment.getInstance())
+//            R.id.action_home -> replaceToFragment(R.id.frame_layout, HomeFragment.getInstance())
+            R.id.action_home -> replaceToFragment(R.id.frame_layout, DetailFragment.getInstance())
             R.id.action_add_photo -> startActivity(Intent(this@MainActivity, AddPhotoActivity::class.java))
         }
 
