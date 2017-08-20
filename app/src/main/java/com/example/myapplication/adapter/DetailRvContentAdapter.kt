@@ -71,7 +71,7 @@ class DetailRvContentAdapter(val context: Context) : RecyclerView.Adapter<Detail
                 tv_favorite_counter.text = "좋아요 ${mContentList[position].favoriteCount} 개"
 
                 val intent: Intent = Intent(context, CommentActivity::class.java)
-                intent.putExtra("imageUid", mContentUidList[position])
+                intent.putExtra("mImageUid", mContentUidList[position])
                 context.startActivity(intent)
             }
         }

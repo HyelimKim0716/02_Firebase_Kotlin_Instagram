@@ -1,36 +1,50 @@
 package com.example.myapplication.view.tabbar.comment
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import com.example.myapplication.R
+import com.example.myapplication.adapter.CommentRvAdapter
 import com.example.myapplication.model.Comment
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.example.myapplication.view.tabbar.comment.presenter.CommentContract
+import com.example.myapplication.view.tabbar.comment.presenter.CommentPresenter
 import kotlinx.android.synthetic.main.activity_comment.*
 
-class CommentActivity : AppCompatActivity() {
+class CommentActivity : AppCompatActivity(), CommentContract.View {
 
-    var imageUid: String? = null
+    lateinit var mPresenter: CommentPresenter
+    lateinit var mAdapter: CommentRvAdapter
+
+    var mImageUid: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
 
-        imageUid = intent.getStringExtra("imageUid")
+        mImageUid = intent.getStringExtra("imageUid")
         btn_send.setOnClickListener {
-            val userId: String? = FirebaseAuth.getInstance().currentUser?.email
-            val comment: String? = et_message.text.toString()
-            val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
-
-            var one: Comment = Comment(uid, userId, comment)
-
-            FirebaseDatabase.getInstance().getReference("images")
-                    .child(imageUid)
-                    .child("comments")
-                    .push()
-                    .setValue(one)
-
+            mPresenter.sendComment(mImageUid, et_message.text.toString())
         }
 
+        mAdapter = CommentRvAdapter(applicationContext)
+        rv_comment.layoutManager = LinearLayoutManager(this)
+        rv_comment.adapter = mAdapter
+
+        mPresenter = CommentPresenter(this)
+        mPresenter.updateComment(mImageUid)
     }
+
+    override fun clearComments() {
+        mAdapter.clearCommentList()
+    }
+
+    override fun notifyDataSetChanged() {
+        mAdapter.notifyDataSetChanged()
+    }
+
+    override fun addComment(comment: Comment) {
+        mAdapter.addComment(comment)
+    }
+
+
 }
