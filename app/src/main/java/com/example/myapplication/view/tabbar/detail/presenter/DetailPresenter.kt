@@ -33,4 +33,6 @@ class DetailPresenter(override val view: DetailContract.View) : DetailContract.P
                 })
     }
 
+
+
 }

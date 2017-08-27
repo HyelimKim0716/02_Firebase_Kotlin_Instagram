@@ -2,10 +2,12 @@ package com.example.myapplication.view.tabbar.user
 
 import android.app.Fragment
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.myapplication.R
+import com.example.myapplication.adapter.UserRvAdapter
 import com.example.myapplication.view.tabbar.user.presenter.UserContract
 import com.example.myapplication.view.tabbar.user.presenter.UserPresenter
 import com.google.firebase.auth.FirebaseAuth
@@ -18,7 +20,7 @@ class UserFragment : Fragment(), UserContract.View {
 
     lateinit var mPresenter : UserPresenter
     val mDestinationUid by lazy {
-        FirebaseAuth.getInstance().currentUser?.uid
+        arguments?.getString("destinationUid")
     }
 
     val uid by lazy {
@@ -31,9 +33,16 @@ class UserFragment : Fragment(), UserContract.View {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        rv_user.layoutManager = GridLayoutManager(context, 3)
+        rv_user.adapter = UserRvAdapter(context)
         btn_follow.setOnClickListener {
-
+            mPresenter.requestFollow(mDestinationUid!!, uid!!)
         }
+
+
+
+        if (mDestinationUid == uid)
+            btn_follow.isEnabled = false
     }
 
 

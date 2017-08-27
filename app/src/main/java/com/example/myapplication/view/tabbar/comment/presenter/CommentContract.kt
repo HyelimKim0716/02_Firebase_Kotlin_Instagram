@@ -14,13 +14,27 @@ interface CommentContract {
 
         fun notifyDataSetChanged()
 
+        fun setFollowerCount(followerCount: String)
+
+        fun setFollowerButton(hasUid: Boolean)
+
+        fun setFollowingCount(followerCount: String)
+
+        fun getMessage() : String
+
+        fun setMessage(message: String)
     }
 
     interface Presenter {
         val view: View
 
-        fun sendComment(imageUid: String?, comment: String)
+        fun sendComment(destinationUid: String, imageUid: String?)
+
+        fun getFollower(destinationUid: String, uid: String?)
+
+        fun getFollowing(destinationUid: String)
 
         fun updateComment(imageUid: String?)
+
     }
 }

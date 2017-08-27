@@ -24,5 +24,6 @@ interface DetailContract {
         val view: View
 
         fun loadImages()
+
     }
 }

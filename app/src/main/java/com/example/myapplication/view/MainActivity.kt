@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import com.example.myapplication.R
 import com.example.myapplication.util.replaceToFragment
+import com.example.myapplication.view.tabbar.alarm.AlarmFragment
 import com.example.myapplication.view.tabbar.detail.DetailFragment
 import com.example.myapplication.view.tabbar.photo.AddPhotoActivity
 import com.example.myapplication.view.tabbar.user.UserFragment
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 fragment.arguments = bundle
                 replaceToFragment(R.id.frame_layout, fragment)
             }
-
+            R.id.action_favorite_alarm -> replaceToFragment(R.id.frame_layout, AlarmFragment.create())
         }
 
         false

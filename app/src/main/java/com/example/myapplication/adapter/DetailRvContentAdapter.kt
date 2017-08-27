@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
+import com.example.myapplication.model.Alarm
 import com.example.myapplication.model.Content
 import com.example.myapplication.view.tabbar.comment.CommentActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -70,9 +71,14 @@ class DetailRvContentAdapter(val context: Context) : RecyclerView.Adapter<Detail
 
                 tv_favorite_counter.text = "좋아요 ${mContentList[position].favoriteCount} 개"
 
-                val intent: Intent = Intent(context, CommentActivity::class.java)
-                intent.putExtra("mImageUid", mContentUidList[position])
-                context.startActivity(intent)
+
+
+                iv_content.setOnClickListener {
+                    val intent: Intent = Intent(context, CommentActivity::class.java)
+                    intent.putExtra("imageUid", mContentUidList[position])
+                    intent.putExtra("destinationUid", mContentList[position].uid)
+                    context.startActivity(intent)
+                }
             }
         }
 
@@ -109,6 +115,16 @@ class DetailRvContentAdapter(val context: Context) : RecyclerView.Adapter<Detail
                         }
 
                     })
+        }
+
+        fun alarmFavorite(destinationUid: String) {
+            val alarm: Alarm = Alarm(destinationUid,
+                    FirebaseAuth.getInstance().currentUser?.email,
+                    FirebaseAuth.getInstance().currentUser?.uid,
+                    0,
+                    "")
+            FirebaseDatabase.getInstance().reference.child("alarms").push().setValue(alarm)
+
         }
 
     }

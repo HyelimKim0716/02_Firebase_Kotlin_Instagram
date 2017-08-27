@@ -13,5 +13,9 @@ interface UserContract {
         val view: View
 
         fun requestFollow(destinationUid: String, uid: String)
+
+        fun getFollower(destinationUid: String)
+
+//        fun getFollowing()
     }
 }
