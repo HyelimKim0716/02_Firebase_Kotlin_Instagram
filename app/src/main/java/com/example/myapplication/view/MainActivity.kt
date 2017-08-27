@@ -1,5 +1,6 @@
 package com.example.myapplication.view
 
+import android.app.Fragment
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -8,7 +9,8 @@ import com.example.myapplication.R
 import com.example.myapplication.util.replaceToFragment
 import com.example.myapplication.view.tabbar.detail.DetailFragment
 import com.example.myapplication.view.tabbar.photo.AddPhotoActivity
-import com.example.myapplication.view.tabbar.home.HomeFragment
+import com.example.myapplication.view.tabbar.user.UserFragment
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +28,14 @@ class MainActivity : AppCompatActivity() {
 //            R.id.action_home -> replaceToFragment(R.id.frame_layout, HomeFragment.getInstance())
             R.id.action_home -> replaceToFragment(R.id.frame_layout, DetailFragment.getInstance())
             R.id.action_add_photo -> startActivity(Intent(this@MainActivity, AddPhotoActivity::class.java))
+            R.id.action_account -> {
+                val fragment: Fragment = UserFragment()
+                val bundle: Bundle = Bundle()
+                bundle.putString("destinationUid", FirebaseAuth.getInstance().currentUser?.uid)
+                fragment.arguments = bundle
+                replaceToFragment(R.id.frame_layout, fragment)
+            }
+
         }
 
         false
