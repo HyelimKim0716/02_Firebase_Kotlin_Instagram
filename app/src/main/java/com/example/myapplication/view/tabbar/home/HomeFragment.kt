@@ -1,8 +1,9 @@
 package com.example.myapplication.view.tabbar.home
 
+import android.app.Fragment
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,7 @@ class HomeFragment : Fragment(), HomeContract.View {
     }
 
     override fun addItems(item: Content) {
+        Log.d("HomeFragment", "addItems " + item.explain)
         mAdapter?.addItem(item)
     }
 

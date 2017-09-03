@@ -9,6 +9,7 @@ import com.example.myapplication.R
 import com.example.myapplication.util.replaceToFragment
 import com.example.myapplication.view.tabbar.alarm.AlarmFragment
 import com.example.myapplication.view.tabbar.detail.DetailFragment
+import com.example.myapplication.view.tabbar.home.HomeFragment
 import com.example.myapplication.view.tabbar.photo.AddPhotoActivity
 import com.example.myapplication.view.tabbar.user.UserFragment
 import com.google.firebase.auth.FirebaseAuth
@@ -26,8 +27,8 @@ class MainActivity : AppCompatActivity() {
 
     val mNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-//            R.id.action_home -> replaceToFragment(R.id.frame_layout, HomeFragment.getInstance())
-            R.id.action_home -> replaceToFragment(R.id.frame_layout, DetailFragment.getInstance())
+            R.id.action_home -> replaceToFragment(R.id.frame_layout, HomeFragment.getInstance())
+            R.id.action_search -> replaceToFragment(R.id.frame_layout, DetailFragment.getInstance())
             R.id.action_add_photo -> startActivity(Intent(this@MainActivity, AddPhotoActivity::class.java))
             R.id.action_account -> {
                 val fragment: Fragment = UserFragment()

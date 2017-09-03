@@ -20,6 +20,6 @@
         android:layout_gravity="bottom"
         app:itemBackground="@color/colorPrimary"
         app:itemIconTint="@android:color/white"
-        app:menu="@menu/main_bottom_navigation"
-        />
+        app:itemTextColor="@android:color/white"
+        app:menu="@menu/main_bottom_navigation" />
 </LinearLayout>

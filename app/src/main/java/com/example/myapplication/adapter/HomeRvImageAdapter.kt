@@ -13,14 +13,14 @@ import com.example.myapplication.model.Content
  * Created by Owner on 2017-08-10.
  */
 class HomeRvImageAdapter(val context: Context) : RecyclerView.Adapter<HomeRvImageAdapter.RvImageAdapterViewHolder>() {
-    var contentItemList: ArrayList<Content> = ArrayList()
+    var mContentItemList: ArrayList<Content> = ArrayList()
 
     fun clearItemList() {
-        contentItemList.clear()
+        mContentItemList.clear()
     }
 
     fun addItem(content: Content) {
-        contentItemList.add(content)
+        mContentItemList.add(content)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RvImageAdapterViewHolder {
@@ -33,13 +33,13 @@ class HomeRvImageAdapter(val context: Context) : RecyclerView.Adapter<HomeRvImag
         holder?.onBindView(position)
     }
 
-    override fun getItemCount(): Int = contentItemList.size
+    override fun getItemCount(): Int = mContentItemList.size
 
     inner class RvImageAdapterViewHolder(val imageView: ImageView) : RecyclerView.ViewHolder(imageView) {
 
         fun onBindView(position: Int) {
             Glide.with(context)
-                    .load(contentItemList[position].imageUrl)
+                    .load(mContentItemList[position].imageUrl)
                     .apply(RequestOptions().centerCrop())
                     .into(imageView)
         }
