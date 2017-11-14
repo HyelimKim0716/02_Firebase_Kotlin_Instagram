@@ -41,7 +41,7 @@ class CommentPresenter(override val view: CommentContract.View) : CommentContrac
                         view.clearComments()
 
                         dataSnapshot?.children?.forEach {
-                            view.addComment(it.getValue(Comment::class.java))
+                            view.addComment(it.getValue(Comment::class.java)!!)
                         }
 
                         view.notifyDataSetChanged()

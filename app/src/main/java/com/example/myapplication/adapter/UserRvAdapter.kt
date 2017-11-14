@@ -28,7 +28,7 @@ class UserRvAdapter(val context: Context) : RecyclerView.Adapter<UserRvAdapter.U
                         contents.clear()
 
                         dataSnapshot?.children?.forEach {
-                            contents.add(it.getValue(Content::class.java))
+                            contents.add(it.getValue(Content::class.java)!!)
                         }
 
                         notifyDataSetChanged()

@@ -25,7 +25,7 @@ class AlarmPresenter(override val view: AlarmContract.View) : AlarmContract.Pres
 
                     override fun onDataChange(dataSnapshot: DataSnapshot?) {
                         dataSnapshot?.children?.forEach {
-                            view.addAlarm(it.getValue(Alarm::class.java))
+                            view.addAlarm(it.getValue(Alarm::class.java)!!)
                         }
 
 

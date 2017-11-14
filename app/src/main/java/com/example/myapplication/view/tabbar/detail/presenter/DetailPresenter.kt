@@ -23,7 +23,7 @@ class DetailPresenter(override val view: DetailContract.View) : DetailContract.P
                         view.clearContentUidList()
 
                         dataSnapshot?.children?.forEach {
-                            view.addContent(it.getValue(Content::class.java))
+                            view.addContent(it.getValue(Content::class.java)!!)
                             view.addContentUid(it.key)
                         }
 

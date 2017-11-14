@@ -25,7 +25,7 @@ class HomePresenter(override val view: HomeContract.View) : HomeContract.Present
                         view.clearItems()
 
                         dataSnapshot?.children?.forEach {
-                            view.addItems(it.getValue(Content::class.java))
+                            view.addItems(it.getValue(Content::class.java)!!)
                         }
 
                         view.notifyDataSetChanged()

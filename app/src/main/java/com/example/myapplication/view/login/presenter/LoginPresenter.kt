@@ -59,11 +59,8 @@ class LoginPresenter(override val view: LoginContract.View, val activity: AppCom
     private var mFirebaseAuthListener: FirebaseAuth.AuthStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
         val user: FirebaseUser? = firebaseAuth.currentUser
 
-        if (user != null) {
-            val intent: Intent = Intent(activity, MainActivity::class.java)
-            activity.startActivity(intent)
-            activity.finish()
-        }
+
+
     }
 
 
@@ -130,6 +127,10 @@ class LoginPresenter(override val view: LoginContract.View, val activity: AppCom
                 ?.addOnCompleteListener(activity) { task ->
                     if (!task.isSuccessful) {
 
+                    } else {
+                        val intent: Intent = Intent(activity, MainActivity::class.java)
+                        activity.startActivity(intent)
+                        activity.finish()
                     }
                 }
     }

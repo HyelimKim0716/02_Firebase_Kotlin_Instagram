@@ -3,6 +3,7 @@ package com.example.myapplication.view.login
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import com.example.myapplication.R
 import com.example.myapplication.view.login.presenter.LoginContract
@@ -57,12 +58,14 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        Log.d("LoginActivity", "requestCode = $requestCode, resultCode = $resultCode")
         mPresenter?.mFacebookCallbackManager?.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
             RC_SIGN_IN -> {
                 val result: GoogleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
 
+                Log.d("LoginActivity", "result = ${result.isSuccess}")
                 if (result.isSuccess) {
                     val account: GoogleSignInAccount? = result.signInAccount
                     mPresenter?.sendGoogleInfoToFirebaseAuth(account)
