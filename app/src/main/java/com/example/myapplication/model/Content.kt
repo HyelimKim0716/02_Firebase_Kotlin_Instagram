@@ -1,18 +1,13 @@
 package com.example.myapplication.model
 
-import android.os.Parcel
-import android.os.Parcelable
-
 /**
  * Created by Owner on 2017-08-10.
  */
-class Content constructor(){
-
-    constructor(explain: String,
-                imageUrl: String,
-                uid: String?,
-                userId: String?,
-                timestamp: String) : this()
+class Content (var explain: String = "",
+                var imageUrl: String = "",
+                var uid: String? = null,
+                var userId: String? = "",
+                var timestamp: String = "") {
 
     var favoriteCount: Int = 0
     var favoriteMap: Map<String, Boolean> = HashMap()

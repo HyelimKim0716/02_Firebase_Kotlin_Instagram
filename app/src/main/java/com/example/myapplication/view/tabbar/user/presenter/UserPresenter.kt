@@ -1,15 +1,22 @@
 package com.example.myapplication.view.tabbar.user.presenter
 
-import com.example.myapplication.model.Follow
-import com.google.firebase.database.*
+import android.app.Activity
+import android.content.Intent
+import android.support.v4.app.ActivityCompat
 import com.example.myapplication.model.Alarm
+import com.example.myapplication.model.Follow
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 
 /**
  * Created by HyelimKim on 2017-08-20.
  */
 class UserPresenter(override val view: UserContract.View) : UserContract.Presenter {
+
+    companion object {
+        val PICK_FROM_ALBUM = 0
+    }
 
     override fun getFollower(destinationUid: String) {
 
@@ -163,5 +170,29 @@ class UserPresenter(override val view: UserContract.View) : UserContract.Present
         FirebaseDatabase.getInstance().reference.child("alarms")
                 .push()
                 .setValue(alarm)
+    }
+
+    override fun openGallery(activity: Activity) {
+        ActivityCompat.requestPermissions(activity, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+
+        val photoPickerIntent = Intent(Intent.ACTION_PICK)
+        photoPickerIntent.type = "image/*"
+        activity.startActivityForResult(photoPickerIntent, PICK_FROM_ALBUM)
+    }
+
+    override fun getProfileImage(destinationUid: String?) {
+        FirebaseDatabase.getInstance().reference
+                .child("profileImages")
+                .child(destinationUid)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError?) {
+
+                    }
+
+                    override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                        view.changeImageProfile(dataSnapshot?.value.toString())
+                    }
+
+                })
     }
 }

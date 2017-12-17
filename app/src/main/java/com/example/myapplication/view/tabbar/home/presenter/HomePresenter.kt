@@ -1,5 +1,6 @@
 package com.example.myapplication.view.tabbar.home.presenter
 
+import android.util.Log
 import com.example.myapplication.model.Content
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -14,6 +15,7 @@ class HomePresenter(override val view: HomeContract.View) : HomeContract.Present
 
 
     override fun loadImages() {
+        Log.d("HomePresenter", "loadImages")
         // Get images from Firebase and show them in list
         FirebaseDatabase.getInstance().reference.child("images")
                 .addValueEventListener(object : ValueEventListener {

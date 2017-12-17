@@ -75,6 +75,7 @@ class AddPhotoPresenter(override val view: AddPhotoContract.View, val activity: 
                     mAuth.currentUser?.email,
                     sdf.format(Date()))
 
+
             images?.setValue(content)
 
             Toast.makeText(activity, "Upload Success", Toast.LENGTH_SHORT).show()

@@ -25,10 +25,13 @@ class AlarmPresenter(override val view: AlarmContract.View) : AlarmContract.Pres
 
                     override fun onDataChange(dataSnapshot: DataSnapshot?) {
                         dataSnapshot?.children?.forEach {
-                            view.addAlarm(it.getValue(Alarm::class.java)!!)
+                            val alarm = it.getValue(Alarm::class.java)!!
+
+                            if (alarm.destinationUid != FirebaseAuth.getInstance().currentUser?.uid)
+                                view.addAlarm(alarm)
                         }
 
-
+                        view.notifyDataSetChanged()
                     }
 
                 })

@@ -20,13 +20,22 @@ import kotlinx.android.synthetic.main.fragment_home.*
  */
 
 class HomeFragment : Fragment(), HomeContract.View {
+    val TAG = "HomeFragment"
 
-    var mPresenter: HomeContract.Presenter? = null
+    val mPresenter: HomeContract.Presenter by lazy {
+        HomePresenter(this)
+    }
+
     var mAdapter: HomeRvImageAdapter? = null
 
     companion object {
-        fun getInstance(): HomeFragment {
-            return HomeFragment()
+        private var instance: HomeFragment? = null
+
+        fun create(): HomeFragment {
+            if (instance == null)
+                return HomeFragment()
+            else
+                return instance!!
         }
     }
 
@@ -35,14 +44,14 @@ class HomeFragment : Fragment(), HomeContract.View {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mPresenter = HomePresenter(this)
+        Log.d(TAG, "onViewCreated")
         mAdapter = HomeRvImageAdapter(context)
 
         rv_image.layoutManager = GridLayoutManager(context, 3)
         rv_image.setHasFixedSize(true)
         rv_image.adapter = mAdapter
 
-        mPresenter?.loadImages()
+        mPresenter.loadImages()
     }
 
     override fun showToast(message: String) {

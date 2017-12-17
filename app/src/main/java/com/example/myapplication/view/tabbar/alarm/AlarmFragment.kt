@@ -22,7 +22,11 @@ class AlarmFragment : Fragment(), AlarmContract.View {
     companion object {
         fun create() = AlarmFragment()
     }
-    val mPresenter = AlarmPresenter(this)
+
+    val mPresenter: AlarmContract.Presenter by lazy {
+        AlarmPresenter(this)
+    }
+
     lateinit var mAlarmAdapter: AlarmRvAdapter
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -34,7 +38,6 @@ class AlarmFragment : Fragment(), AlarmContract.View {
         rv_alarm.adapter = mAlarmAdapter
 
         mPresenter.loadAlarm()
-
     }
 
     override fun clearAlarm() {

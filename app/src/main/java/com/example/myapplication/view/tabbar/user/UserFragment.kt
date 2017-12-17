@@ -6,6 +6,8 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.myapplication.R
 import com.example.myapplication.adapter.UserRvAdapter
 import com.example.myapplication.view.tabbar.user.presenter.UserContract
@@ -18,7 +20,10 @@ import kotlinx.android.synthetic.main.fragment_user.*
  */
 class UserFragment : Fragment(), UserContract.View {
 
-    lateinit var mPresenter : UserPresenter
+    val mPresenter: UserContract.Presenter by lazy {
+        UserPresenter(this)
+    }
+
     val mDestinationUid by lazy {
         arguments?.getString("destinationUid")
     }
@@ -40,11 +45,22 @@ class UserFragment : Fragment(), UserContract.View {
         }
 
 
-
-        if (mDestinationUid == uid)
+        if (mDestinationUid == uid) {
             btn_follow.isEnabled = false
+
+            iv_profile.setOnClickListener {
+                mPresenter.openGallery(activity)
+            }
+        }
+
+        mPresenter.getProfileImage(mDestinationUid)
     }
 
-
+    override fun changeImageProfile(url: String) {
+        Glide.with(activity)
+                .load(url)
+                .apply(RequestOptions().circleCrop())
+                .into(iv_profile)
+    }
 
 }

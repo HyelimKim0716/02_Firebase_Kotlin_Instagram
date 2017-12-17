@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.myapplication.R
 import com.example.myapplication.model.Alarm
 import com.example.myapplication.model.Content
@@ -79,6 +80,23 @@ class DetailRvContentAdapter(val context: Context) : RecyclerView.Adapter<Detail
                     intent.putExtra("destinationUid", mContentList[position].uid)
                     context.startActivity(intent)
                 }
+
+                FirebaseDatabase.getInstance().reference
+                        .child("profileImages")
+                        .child(mContentList[position].uid)
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError?) {
+
+                            }
+
+                            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                                Glide.with(context)
+                                        .load(dataSnapshot?.value.toString())
+                                        .apply(RequestOptions().circleCrop())
+                                        .into(iv_profile)
+                            }
+
+                        })
             }
         }
 
