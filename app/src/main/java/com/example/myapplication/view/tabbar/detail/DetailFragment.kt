@@ -20,8 +20,8 @@ import kotlinx.android.synthetic.main.fragment_detail.*
  */
 class DetailFragment : Fragment(), DetailContract.View {
 
-    private lateinit var mAdapter: DetailRvContentAdapter
-    private lateinit var mPresenter: DetailPresenter
+    private val mAdapter: DetailRvContentAdapter by lazy { DetailRvContentAdapter(context) }
+    private val mPresenter: DetailPresenter by lazy { DetailPresenter(this) }
 
     companion object {
         fun getInstance() = DetailFragment()
@@ -33,12 +33,10 @@ class DetailFragment : Fragment(), DetailContract.View {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mPresenter = DetailPresenter(this)
-
         rv_detail_content.layoutManager = LinearLayoutManager(context)
-        mAdapter = DetailRvContentAdapter(context)
         rv_detail_content.adapter = mAdapter
 
+        mPresenter.loadImages()
     }
 
     override fun clearContentList() {

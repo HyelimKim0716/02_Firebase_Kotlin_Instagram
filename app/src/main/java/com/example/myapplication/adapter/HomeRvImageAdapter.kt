@@ -2,7 +2,9 @@ package com.example.myapplication.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
@@ -13,6 +15,8 @@ import com.example.myapplication.model.Content
  * Created by Owner on 2017-08-10.
  */
 class HomeRvImageAdapter(val context: Context) : RecyclerView.Adapter<HomeRvImageAdapter.RvImageAdapterViewHolder>() {
+
+    private val mWidth by lazy { context.resources.displayMetrics.widthPixels.div(3) }
     var mContentItemList: ArrayList<Content> = ArrayList()
 
     fun clearItemList() {
@@ -24,8 +28,9 @@ class HomeRvImageAdapter(val context: Context) : RecyclerView.Adapter<HomeRvImag
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RvImageAdapterViewHolder {
-        val imageView: ImageView = ImageView(context)
-        imageView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        val imageView = ImageView(context)
+        imageView.layoutParams = LinearLayout.LayoutParams(mWidth, mWidth)
+        imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
         return RvImageAdapterViewHolder(imageView)
     }
 
@@ -35,9 +40,10 @@ class HomeRvImageAdapter(val context: Context) : RecyclerView.Adapter<HomeRvImag
 
     override fun getItemCount(): Int = mContentItemList.size
 
-    inner class RvImageAdapterViewHolder(val imageView: ImageView) : RecyclerView.ViewHolder(imageView) {
+    inner class RvImageAdapterViewHolder(private val imageView: ImageView) : RecyclerView.ViewHolder(imageView) {
 
         fun onBindView(position: Int) {
+            Log.d("HomeRvImageAdapter", "image url = ${mContentItemList[position].imageUrl}")
             Glide.with(context)
                     .load(mContentItemList[position].imageUrl)
                     .apply(RequestOptions().centerCrop())

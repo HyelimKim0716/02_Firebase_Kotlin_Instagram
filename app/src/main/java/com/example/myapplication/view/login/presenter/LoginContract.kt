@@ -18,7 +18,7 @@ interface LoginContract {
     }
 
     interface Presenter {
-        val view: View
+        val mView: View
 
         val mFacebookCallbackManager: CallbackManager?
 

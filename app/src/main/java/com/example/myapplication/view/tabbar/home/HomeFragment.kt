@@ -3,6 +3,7 @@ package com.example.myapplication.view.tabbar.home
 import android.app.Fragment
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,11 +23,8 @@ import kotlinx.android.synthetic.main.fragment_home.*
 class HomeFragment : Fragment(), HomeContract.View {
     val TAG = "HomeFragment"
 
-    val mPresenter: HomeContract.Presenter by lazy {
-        HomePresenter(this)
-    }
-
-    var mAdapter: HomeRvImageAdapter? = null
+    private val mPresenter: HomeContract.Presenter by lazy { HomePresenter(this) }
+    private val mAdapter: HomeRvImageAdapter by lazy { HomeRvImageAdapter(context) }
 
     companion object {
         private var instance: HomeFragment? = null
@@ -45,7 +43,6 @@ class HomeFragment : Fragment(), HomeContract.View {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated")
-        mAdapter = HomeRvImageAdapter(context)
 
         rv_image.layoutManager = GridLayoutManager(context, 3)
         rv_image.setHasFixedSize(true)
@@ -60,15 +57,15 @@ class HomeFragment : Fragment(), HomeContract.View {
 
     override fun addItems(item: Content) {
         Log.d("HomeFragment", "addItems " + item.explain)
-        mAdapter?.addItem(item)
+        mAdapter.addItem(item)
     }
 
     override fun clearItems() {
-        mAdapter?.clearItemList()
+        mAdapter.clearItemList()
     }
 
     override fun notifyDataSetChanged() {
-        mAdapter?.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
 

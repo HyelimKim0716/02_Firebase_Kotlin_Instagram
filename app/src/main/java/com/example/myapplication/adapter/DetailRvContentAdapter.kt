@@ -3,6 +3,7 @@ package com.example.myapplication.adapter
 import android.content.Context
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
@@ -105,7 +106,7 @@ class DetailRvContentAdapter(val context: Context) : RecyclerView.Adapter<Detail
                     .child(mContentUidList[position])
                     .runTransaction(object : Transaction.Handler {
                         override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            Log.d("DetailRvContentAdapter", "onCompleted!")
                         }
 
                         override fun doTransaction(mutableData: MutableData?): Transaction.Result {
@@ -122,7 +123,7 @@ class DetailRvContentAdapter(val context: Context) : RecyclerView.Adapter<Detail
                             } else {
                                 // Start the post and add self to start
                                 content.favoriteCount++
-                                content.favoriteMap.plus(uid to true)
+                                content.favoriteMap.plus(mapOf(uid to true))
                                 // likeButtonAlarm(imageDTOs.get(i).uid);
                             }
 

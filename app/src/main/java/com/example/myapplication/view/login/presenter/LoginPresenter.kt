@@ -2,6 +2,7 @@ package com.example.myapplication.view.login.presenter
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import com.example.myapplication.R
 import com.example.myapplication.view.MainActivity
@@ -19,9 +20,12 @@ import com.google.firebase.auth.*
 /**
  * Created by Owner on 2017-08-10.
  */
-class LoginPresenter(override val view: LoginContract.View, val activity: AppCompatActivity) : LoginContract.Presenter {
+open class LoginPresenter(override val mView: LoginContract.View, private val mActivity: AppCompatActivity) : LoginContract.Presenter {
 
-    private var mFirebaseAuth: FirebaseAuth? = null
+    private val mFirebaseAuth: FirebaseAuth by lazy {
+        // Make an object which manages entire firebase login services
+         FirebaseAuth.getInstance()
+    }
 
     override val mFacebookCallbackManager: CallbackManager? by lazy {
         CallbackManager.Factory.create()
@@ -45,12 +49,12 @@ class LoginPresenter(override val view: LoginContract.View, val activity: AppCom
         // Set google login options (request token, request authentication, ... etc)
         val mGoogleSignInOptions = GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(activity.getString(R.string.default_web_client_id))
+                .requestIdToken(mActivity.getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
 
-        GoogleApiClient.Builder(activity)
-                .enableAutoManage(activity, mConnectionFailedListener)
+        GoogleApiClient.Builder(mActivity)
+                .enableAutoManage(mActivity, mConnectionFailedListener)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOptions)
                 .build()
     }
@@ -68,50 +72,54 @@ class LoginPresenter(override val view: LoginContract.View, val activity: AppCom
 
     }
 
-    init {
-        // Make an object which manages entire firebase login services
-        mFirebaseAuth = FirebaseAuth.getInstance()
-    }
-
     override fun addFirebaseAuthStateListener() {
-        mFirebaseAuth?.addAuthStateListener(mFirebaseAuthListener)
+        mFirebaseAuth.addAuthStateListener(mFirebaseAuthListener)
     }
 
     override fun removeFirebaseAuthStateListener() {
-        mFirebaseAuth?.removeAuthStateListener(mFirebaseAuthListener)    }
+        mFirebaseAuth.removeAuthStateListener(mFirebaseAuthListener)    }
 
     /**
      * Register email and sign in
      */
     override fun registerEmailAndSignIn() {
-        mFirebaseAuth?.createUserWithEmailAndPassword(view.getUserMail(), view.getUserPassword())
-                ?.addOnCompleteListener(activity) { task ->
-                                        if (task.isSuccessful) {
-                        Toast.makeText(activity, "회원가입 성공", Toast.LENGTH_SHORT).show()
-                    } else if (view.getUserPassword().length < 6) {
-//                    Error : Password needs 6 characters more
-                        Toast.makeText(activity, task.exception?.message, Toast.LENGTH_SHORT).show()
-                    } else {
-//                    Error : If firebase has same id which user input, sign in email, not occurs error
-                        sendEmailInfoToFirebaseAuth()
+        Log.d("LoginPresenter", "registerEmailAndSignIn, mail:${mView.getUserMail()}, password: ${mView.getUserPassword()}")
+
+        mFirebaseAuth.createUserWithEmailAndPassword(mView.getUserMail(), mView.getUserPassword())
+                .addOnCompleteListener(mActivity) { task ->
+                    Log.d("LoginPresenter", "registerEmailAndSignIn, isSuccessful? ${task.isSuccessful}")
+                    when {
+                        task.isSuccessful -> Toast.makeText(mActivity, "회원가입 성공", Toast.LENGTH_SHORT).show()
+                        mView.getUserPassword().length < 6 -> //                    Error : Password needs 6 characters more
+                            Toast.makeText(mActivity, task.exception?.message, Toast.LENGTH_SHORT).show()
+                        else -> //                    Error : If firebase has same id which user input, sign in email, not occurs error
+                            sendEmailInfoToFirebaseAuth()
                     }
 
-                }
+                }.addOnSuccessListener {
+            Log.d("LoginPresenter", "OnSuccessListener, Success Login!")
+        }.addOnFailureListener {
+            it.printStackTrace()
+            Log.e("LoginPresenter", "OnFailureListener, Fail Login, error: ${it.message}")
+            if (it.message.equals("The email address is already in use by another account."))
+                sendEmailInfoToFirebaseAuth()
+        }
 
     }
 
     /**
      * Send email information to Firebase
      */
-    fun sendEmailInfoToFirebaseAuth() {
-        mFirebaseAuth?.signInWithEmailAndPassword(view.getUserMail(), view.getUserPassword())
-                ?.addOnCompleteListener(activity) {
+    private fun sendEmailInfoToFirebaseAuth() {
+        mFirebaseAuth.signInWithEmailAndPassword(mView.getUserMail(), mView.getUserPassword())
+                .addOnCompleteListener(mActivity) {
                     task ->
+                    Log.d("LoginPresenter", "sendEmailInfoToFirebaseAuth, isSuccessful? ${task.isSuccessful}")
                     if (task.isSuccessful) {
-
+                        Toast.makeText(mActivity, "signInWithEmailAndPassword is successful", Toast.LENGTH_SHORT).show()
                     } else {
                         // Error : Wrong password
-                        Toast.makeText(activity, task.exception?.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(mActivity, task.exception?.message, Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -123,14 +131,14 @@ class LoginPresenter(override val view: LoginContract.View, val activity: AppCom
     override fun sendGoogleInfoToFirebaseAuth(googleSignInAccount: GoogleSignInAccount?) {
         val credential: AuthCredential = GoogleAuthProvider.getCredential(googleSignInAccount?.idToken, null)
 
-        mFirebaseAuth?.signInWithCredential(credential)
-                ?.addOnCompleteListener(activity) { task ->
+        mFirebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(mActivity) { task ->
                     if (!task.isSuccessful) {
 
                     } else {
-                        val intent: Intent = Intent(activity, MainActivity::class.java)
-                        activity.startActivity(intent)
-                        activity.finish()
+                        val intent: Intent = Intent(mActivity, MainActivity::class.java)
+                        mActivity.startActivity(intent)
+                        mActivity.finish()
                     }
                 }
     }
@@ -140,8 +148,8 @@ class LoginPresenter(override val view: LoginContract.View, val activity: AppCom
      */
     fun sendFacebookTokenToFirebaseAuth(token: AccessToken?) {
         val credential: AuthCredential = FacebookAuthProvider.getCredential(token?.token!!)
-        mFirebaseAuth?.signInWithCredential(credential)
-                ?.addOnCompleteListener { task ->
+        mFirebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener { task ->
                     if (!task.isSuccessful) {
 
                     }

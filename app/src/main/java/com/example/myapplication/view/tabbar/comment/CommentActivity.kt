@@ -17,32 +17,24 @@ import kotlinx.android.synthetic.main.item_comment.*
 
 class CommentActivity : AppCompatActivity(), CommentContract.View {
 
-    lateinit var mPresenter: CommentPresenter
-    lateinit var mAdapter: CommentRvAdapter
+    private val mPresenter: CommentPresenter by lazy { CommentPresenter(this) }
+    private val mAdapter: CommentRvAdapter by lazy { CommentRvAdapter(applicationContext) }
 
-    var mImageUid: String? = null
-    val mDestinationUid: String by lazy {
-        intent.getStringExtra("destinationUid")
-    }
-
-    val mUid: String? by lazy {
-        FirebaseAuth.getInstance().currentUser?.uid
-    }
+    private val mImageUid: String by lazy { intent.getStringExtra("imageUid") }
+    private val mDestinationUid: String by lazy { intent.getStringExtra("destinationUid") }
+    private val mUid: String? by lazy { FirebaseAuth.getInstance().currentUser?.uid }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
 
-        mImageUid = intent.getStringExtra("imageUid")
         btn_send.setOnClickListener {
             mPresenter.sendComment(mDestinationUid, mImageUid)
         }
 
-        mAdapter = CommentRvAdapter(applicationContext)
         rv_comment.layoutManager = LinearLayoutManager(this)
         rv_comment.adapter = mAdapter
 
-        mPresenter = CommentPresenter(this)
         mPresenter.updateComment(mImageUid)
 
         btn_send.setOnClickListener {

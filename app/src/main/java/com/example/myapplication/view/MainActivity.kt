@@ -22,8 +22,8 @@ import com.example.myapplication.view.tabbar.photo.AddPhotoActivity
 import com.example.myapplication.view.tabbar.user.UserFragment
 import com.example.myapplication.view.tabbar.user.presenter.UserPresenter
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,6 +36,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val refreshedToken = FirebaseInstanceId.getInstance().token
+        println("Refreshed token : $refreshedToken")
+
+        replaceToFragment(R.id.frame_layout, HomeFragment.create())
         Log.d(TAG, "token : ${FirebaseInstanceId.getInstance().token}" )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = getString(R.string.default_notification_channel_id)
@@ -71,8 +75,8 @@ class MainActivity : AppCompatActivity() {
         bottom_navigation.setOnNavigationItemSelectedListener(mNavigationItemSelectedListener)
     }
 
-    val mNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            Log.d("MainActivity", "item.itemId = ${item.itemId}")
+    private val mNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        Log.d("MainActivity", "item.itemId = ${item.itemId}")
         when (item.itemId) {
             R.id.action_home -> replaceToFragment(R.id.frame_layout, HomeFragment.create())
             R.id.action_search -> replaceToFragment(R.id.frame_layout, DetailFragment.getInstance())
